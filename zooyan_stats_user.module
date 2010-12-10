@@ -84,22 +84,41 @@ function zooyan_stats_user_get_num_users($days_ago) {
 
 	$retval = "";
 
-	//
-	// Get our starting time.  Start at midnight (local time) and subtract
-	// the appropriate number of days.
-	//
-	$start = mktime(0, 0, 0);
-	$start = $start - (86400 * $days_ago);
 
-	$end = $start + 86399;
+	$dates = zooyan_stats_user_get_dates($days_ago);
 
-	dpr("$days_ago: $start, " . format_date($start) . ", " . format_date($end)); // Debugging
+	//dpr("$days_ago: " . format_date($dates["start"]) . ", " . format_date($dates["end"])); // Debugging
+	//dpr($dates); // Debugging
 
 	return($retval);
 
 } // End of zooyan_stats_user_get_num_users()
 
 
+/**
+* Get the starting and ending time_ts for our user query.
+*
+* @param integer $days_ago How many days ago do we want active users from?
+*	Note that this means calendar days.  Aka 12 AM to 11:59:59 PM in the 
+*	calling user's timezone.
+*
+* @return array An array of the starting and stopping time_ts.
+*/
+function zooyan_stats_user_get_dates($days_ago) {
 
+	$retval = array();
+
+	//
+	// Get our starting time.  Start at midnight (local time) and subtract
+	// the appropriate number of days.
+	//
+	$retval["start"] = mktime(0, 0, 0);
+	$retval["start"] -= (86400 * $days_ago);
+
+	$retval["end"] = $retval["start"] + 86399;
+
+	return($retval);
+
+} // End of zooyan_stats_user_get_dates()
 
 
