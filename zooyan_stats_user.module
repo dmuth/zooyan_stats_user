@@ -15,6 +15,11 @@
 		- zooyan_stats_user_email
 	- "Email Now" button
 - Actually Send email
+- Cron hook to run once a day
+	Get start/stop times for current day
+	Check to see if report run, when it should run, etc.
+	Possibly run it
+	Update a variable when done!
 
 */
 
@@ -65,11 +70,83 @@ $retval .= zooyan_stats_user_get_num_users(1);
 $retval .= zooyan_stats_user_get_num_users(2);
 $retval .= zooyan_stats_user_get_num_users(3);
 
+	$retval .= drupal_get_form("zooyan_stats_user_form");
 
 	return($retval);
 
 } // End of zooyan_stats_user_page()
 
+
+/**
+* Our form for user stats.
+*
+* @return Our array of form data.
+*/
+function zooyan_stats_user_form($form_state) {
+
+	$retval = array();
+
+	//
+	// Some simple user stats
+	//
+	$retval["users"] = array(
+		"#title" => t("Users"),
+		"#type" => "fieldset",
+		);
+
+	$retval["users"]["yesterday"] = array(
+		"#type" => "item",
+		"#title" => t("# Users registered yesterday"),
+		"#value" => zooyan_stats_user_get_num_users(1)
+		);
+
+	$retval["users"]["today"] = array(
+		"#type" => "item",
+		"#title" => t("# Users registered today (so far)"),
+		"#value" => zooyan_stats_user_get_num_users(0)
+		);
+
+	//
+	// Our settings
+	//
+	$retval["settings"] = array(
+		"#title" => t("Settings"),
+		"#type" => "fieldset",
+		);
+
+	$retval["settings"]["email"] = array(
+		"#title" => t("Email address to send reports to"),
+		"#type" => "textfield",
+		"#default_value" => zooyan_stats_user_get_email(),
+		"#required" => TRUE,
+		);
+
+	$retval["submit"] = array(
+		"#type" => "submit",
+		"#value" => t("Save"),
+		);
+
+	$retval["mail"] = array(
+		"#type" => "submit",
+		"#value" => t("Send e-mail report NOW"),
+		);
+
+	return($retval);
+
+} // End of zooyan_stats_user_form()
+
+
+// get_email function
+// validate function
+// submit function
+
+/**
+* Get our current email address.
+*/
+function zooyan_stats_user_get_email() {
+	$retval = variable_get("zooyan_stats_user_get_email", "");
+	return($retval);
+}
 
 /**
 * This function calculates how many active users are on the site.
