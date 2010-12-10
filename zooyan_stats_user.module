@@ -12,10 +12,6 @@
 *
 */
 
-/**
-@TODO:
-- Refactor call to variable_get() in install file?
-*/
 
 /**
 * Create our menu item.
