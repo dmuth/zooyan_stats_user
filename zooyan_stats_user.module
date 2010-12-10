@@ -168,10 +168,10 @@ function zooyan_stats_user_form_submit($form, $form_state) {
 function zooyan_stats_user_send_email($email) {
 
 	$subject = "Current User Report";
-	$body = "Number of users who registered today: " 
+	$body = "Number of users who registered yesterday: " 
 		. zooyan_stats_user_get_num_users(0) . "\r\n"
-		. "Number of users who registered yesterday: " 
-		. zooyan_stats_user_get_num_users(1) . "\r\n"
+		. "Number of users who registered in total: " 
+		. zooyan_stats_user_get_num_users("all") . "\r\n"
 		;
 
 	$params = array();
