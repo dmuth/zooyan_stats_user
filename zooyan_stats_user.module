@@ -5,22 +5,14 @@
 *
 * @author Douglas Muth <http://www.dmuth.org/>
 *
+* KNOWN ISSUES:
+*	- No direct control over what time of day the crontab is run
+*
 */
 
 /**
 @TODO:
-- Form
-	- Update address
-		- zooyan_stats_user_email
-	- "Email Now" button
-- Actually Send email
-- Cron hook to run once a day
-	Get start/stop times for current day
-	Check to see if report run, when it should run, etc.
-	Possibly run it
-	Update a variable when done!
 - Refactor call to variable_get() in install file?
-
 */
 
 
@@ -266,5 +258,31 @@ function zooyan_stats_user_get_dates($days_ago) {
 	return($retval);
 
 } // End of zooyan_stats_user_get_dates()
+
+
+/**
+* This is our cron hook. It is called when cron is run.
+*/
+function zooyan_stats_user_cron() {
+
+	//
+	// Get the time_t for the start of today and the last time the cron 
+	// hook was successfuly run.
+	//
+	$dates = zooyan_stats_user_get_dates(0);
+	$key = "zooyan_stats_user_cron_lastrun";
+	$last_run = variable_get($key, 0);
+
+	//
+	// If we were last run before today's date, run our report now.
+	//
+	if ($last_run < $dates["start"]) {
+		$email = zooyan_stats_user_get_email();
+		zooyan_stats_user_send_email($email);
+		variable_set($key, time());
+	}
+
+} // End of zooyan_stats_user_cron()
+
 
 
