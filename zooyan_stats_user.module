@@ -7,6 +7,8 @@
 *
 * KNOWN ISSUES:
 *	- No direct control over what time of day the crontab is run
+*	- The string "zooyan_stats_user_email" is repeated several times. 
+*		This already caused one bug during development.
 *
 */
 
@@ -14,8 +16,6 @@
 @TODO:
 - Refactor call to variable_get() in install file?
 */
-
-
 
 /**
 * Create our menu item.
@@ -141,7 +141,7 @@ function zooyan_stats_user_form_submit($form, $form_state) {
 	$op = $values["op"];
 	$email = $values["email"];
 
-	variable_set("zooyan_stats_user_get_email", $email);
+	variable_set("zooyan_stats_user_email", $email);
 	drupal_set_message(t("Email address updated."));
 
 	//
@@ -195,7 +195,7 @@ function zooyan_stats_user_send_email($email) {
 * Get our current email address.
 */
 function zooyan_stats_user_get_email() {
-	$retval = variable_get("zooyan_stats_user_get_email", "");
+	$retval = variable_get("zooyan_stats_user_email", "");
 	return($retval);
 }
 
