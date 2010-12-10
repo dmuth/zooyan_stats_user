@@ -9,7 +9,7 @@
 
 /**
 @TODO:
-- Status check for email address
+- Menu hook for /admin/zooyan/stats/users
 - Total number of users currently
 - Get current timezone
 - Total number of users
@@ -19,6 +19,7 @@
 - Form
 	- List user counts
 	- Update address
+		- zooyan_stats_user_email
 	- "Email Now" button
 - Actually Send email
 

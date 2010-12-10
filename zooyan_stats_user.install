@@ -1,0 +1,38 @@
+<?php
+
+
+/**
+* Check to make sure we have an email address defined.
+*
+* @param string $phase Either "install" or "runtime".
+*
+* @return array An array of requirements.
+*/
+function zooyan_stats_user_requirements($phase) {
+
+	$retval = array();
+
+	if ($phase == "runtime") {
+
+		$email = variable_get("zooyan_stats_user_email", "");
+
+		if (empty($email)) {
+
+			$row = array();
+			$row["title"] = t("Email Address");
+			$row["value"] = "";
+			$row["description"] = t("You must !link of the recipient.",
+				array("!link" => l(t("specify an email address"), "/admin/zooyan/stats/users")));
+			$row["severity"] = REQUIREMENT_ERROR;
+
+			$retval[] = $row;
+
+		}
+
+	}
+
+	return($retval);
+
+} // End of zooyan_stats_user_requirements()
+
+
