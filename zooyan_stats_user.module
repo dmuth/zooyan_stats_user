@@ -10,7 +10,6 @@
 /**
 @TODO:
 - Form
-	- List user counts
 	- Update address
 		- zooyan_stats_user_email
 	- "Email Now" button
@@ -20,6 +19,7 @@
 	Check to see if report run, when it should run, etc.
 	Possibly run it
 	Update a variable when done!
+- Refactor call to variable_get() in install file?
 
 */
 
@@ -64,11 +64,7 @@ function zooyan_stats_user_perm() {
 */
 function zooyan_stats_user_page() {
 
-	$retval = "placeholder";
-$retval .= zooyan_stats_user_get_num_users(0);
-$retval .= zooyan_stats_user_get_num_users(1);
-$retval .= zooyan_stats_user_get_num_users(2);
-$retval .= zooyan_stats_user_get_num_users(3);
+	$retval = "";
 
 	$retval .= drupal_get_form("zooyan_stats_user_form");
 
@@ -128,7 +124,7 @@ function zooyan_stats_user_form($form_state) {
 
 	$retval["mail"] = array(
 		"#type" => "submit",
-		"#value" => t("Send e-mail report NOW"),
+		"#value" => t("Save and send e-mail report NOW"),
 		);
 
 	return($retval);
@@ -136,9 +132,72 @@ function zooyan_stats_user_form($form_state) {
 } // End of zooyan_stats_user_form()
 
 
-// get_email function
-// validate function
-// submit function
+/**
+* Our form validation function.
+*/
+function zooyan_stats_user_form_validate($form, $form_state) {
+	// Right now, we're doing absolutely nothing!
+}
+
+
+/**
+* Our form submission handler.  Save submitted data, optionally send email.
+*/
+function zooyan_stats_user_form_submit($form, $form_state) { 
+
+	$values = $form_state["values"];
+	$op = $values["op"];
+	$email = $values["email"];
+
+	variable_set("zooyan_stats_user_get_email", $email);
+	drupal_set_message(t("Email address updated."));
+
+	//
+	// Are we also emailing off the report?
+	//
+	if ($op == t("Save and send e-mail report NOW")) {
+		zooyan_stats_user_send_email($email);
+	}
+
+} // End of zooyan_stats_user_form_submit()
+
+
+/**
+* Actually create and send our email.
+*
+* @param string $email The email address to send the report off to.
+*/
+function zooyan_stats_user_send_email($email) {
+
+	$subject = "Current User Report";
+	$body = "Number of users who registered today: " 
+		. zooyan_stats_user_get_num_users(0) . "\r\n"
+		. "Number of users who registered yesterday: " 
+		. zooyan_stats_user_get_num_users(1) . "\r\n"
+		;
+
+	$params = array();
+	$params["id"] = "zooyan stats user report";
+	$params["to"] = $email;
+	$params["subject"] = $subject;
+	$params["body"] = $body;
+	$params["headers"] = array();
+	//dpr($params); // Debugging
+	$result = drupal_mail_send($params);
+	if (!$result) {
+		$message = t("Call to drupal_mail_send() failed!");
+		drupal_set_message($message, "error");
+		watchdog("zooyan", $message, WATCHDOG_ERROR);
+		
+	} else {
+		$message = t("User report emailed to %email", array("%email" => $email));
+		drupal_set_message($message);
+		watchdog("zooyan", $message);
+
+	}
+
+} // End of zooyan_stats_user_send_email()
+
 
 /**
 * Get our current email address.
