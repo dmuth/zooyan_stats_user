@@ -22,7 +22,7 @@ function zooyan_stats_user_requirements($phase) {
 			$row["title"] = t("Email Address");
 			$row["value"] = "";
 			$row["description"] = t("You must !link of the recipient.",
-				array("!link" => l(t("specify an email address"), "/admin/zooyan/stats/users")));
+				array("!link" => l(t("specify an email address"), "admin/zooyan/stats/users")));
 			$row["severity"] = REQUIREMENT_ERROR;
 
 			$retval[] = $row;
