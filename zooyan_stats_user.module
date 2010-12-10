@@ -9,9 +9,7 @@
 
 /**
 @TODO:
-- Total number of users currently
-- Users yesterday
-	- Determine start and stop seconds of yesterday
+- Determine user numbers
 - Form
 	- List user counts
 	- Update address
@@ -87,12 +85,6 @@ function zooyan_stats_user_get_num_users($days_ago) {
 	$retval = "";
 
 	//
-	// Get the user's GMT offset in seconds.
-	//
-	$offset = $GLOBALS["user"]->timezone;
-	$modifier = $offset * -1;
-
-	//
 	// Get our starting time.  Start at midnight (local time) and subtract
 	// the appropriate number of days.
 	//
@@ -101,7 +93,7 @@ function zooyan_stats_user_get_num_users($days_ago) {
 
 	$end = $start + 86399;
 
-	//dpr("$days_ago: $offset, $modifier, $start, " . format_date($start) . ", " . format_date($end)); // Debugging
+	dpr("$days_ago: $start, " . format_date($start) . ", " . format_date($end)); // Debugging
 
 	return($retval);
 
