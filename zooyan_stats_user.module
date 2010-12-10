@@ -82,16 +82,22 @@ function zooyan_stats_user_form($form_state) {
 		"#type" => "fieldset",
 		);
 
+	$retval["users"]["today"] = array(
+		"#type" => "item",
+		"#title" => t("# Users registered today (so far)"),
+		"#value" => zooyan_stats_user_get_num_users(0)
+		);
+
 	$retval["users"]["yesterday"] = array(
 		"#type" => "item",
 		"#title" => t("# Users registered yesterday"),
 		"#value" => zooyan_stats_user_get_num_users(1)
 		);
 
-	$retval["users"]["today"] = array(
+	$retval["users"]["all"] = array(
 		"#type" => "item",
-		"#title" => t("# Users registered today (so far)"),
-		"#value" => zooyan_stats_user_get_num_users(0)
+		"#title" => t("# Total users registered"),
+		"#value" => zooyan_stats_user_get_num_users("all")
 		);
 
 	//
@@ -199,15 +205,18 @@ function zooyan_stats_user_get_email() {
 	return($retval);
 }
 
+
 /**
 * This function calculates how many active users are on the site.
 *
 * @param integer $days_ago How many days ago do we want active users from?
 *	Note that this means calendar days.  Aka 12 AM to 11:59:59 PM in the 
 *	calling user's timezone.
+*	SPECIAL CASE: If set to "all", ALL users are counted, regardless of 
+*		when they were created.
 *
 */
-function zooyan_stats_user_get_num_users($days_ago) {
+function zooyan_stats_user_get_num_users($days_ago = "all") {
 
 	$retval = "";
 
@@ -215,15 +224,22 @@ function zooyan_stats_user_get_num_users($days_ago) {
 	//dpr("$days_ago: " . format_date($dates["start"]) . ", " . format_date($dates["end"])); // Debugging
 	//dpr($dates); // Debugging
 
+	$where = "";
+	$query_args = array();
+	if ($days_ago != "all") {
+		$where = "AND created >= %s "
+			. "AND created <= %s "
+			;
+		$query_args = array($dates["start"], $dates["end"]);
+	}
+
 	$query = "SELECT "
 		. "COUNT(*) AS cnt "
 		. "FROM {users} "
 		. "WHERE "
 		. "status=1 "
-		. "AND created >= %s "
-		. "AND created <= %s "
+		. $where
 		;
-	$query_args = array($dates["start"], $dates["end"]);
 	$cursor = db_query($query, $query_args);
 	$row = db_fetch_array($cursor);
 	$retval = $row["cnt"];
