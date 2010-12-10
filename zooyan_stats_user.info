@@ -1,0 +1,9 @@
+
+name = Zooyan User Stats
+description = "User registration statistics."
+package = Zooyan
+core = 6.x
+
+version = 1.0
+
+
