@@ -9,7 +9,6 @@
 
 /**
 @TODO:
-- Determine user numbers
 - Form
 	- List user counts
 	- Update address
@@ -84,11 +83,22 @@ function zooyan_stats_user_get_num_users($days_ago) {
 
 	$retval = "";
 
-
 	$dates = zooyan_stats_user_get_dates($days_ago);
-
 	//dpr("$days_ago: " . format_date($dates["start"]) . ", " . format_date($dates["end"])); // Debugging
 	//dpr($dates); // Debugging
+
+	$query = "SELECT "
+		. "COUNT(*) AS cnt "
+		. "FROM {users} "
+		. "WHERE "
+		. "status=1 "
+		. "AND created >= %s "
+		. "AND created <= %s "
+		;
+	$query_args = array($dates["start"], $dates["end"]);
+	$cursor = db_query($query, $query_args);
+	$row = db_fetch_array($cursor);
+	$retval = $row["cnt"];
 
 	return($retval);
 
