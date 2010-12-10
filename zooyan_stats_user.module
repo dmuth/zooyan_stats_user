@@ -10,8 +10,6 @@
 /**
 @TODO:
 - Total number of users currently
-- Get current timezone
-- Total number of users
 - Users yesterday
 	- Determine start and stop seconds of yesterday
 - Form
@@ -65,9 +63,51 @@ function zooyan_stats_user_perm() {
 function zooyan_stats_user_page() {
 
 	$retval = "placeholder";
+$retval .= zooyan_stats_user_get_num_users(0);
+$retval .= zooyan_stats_user_get_num_users(1);
+$retval .= zooyan_stats_user_get_num_users(2);
+$retval .= zooyan_stats_user_get_num_users(3);
+
 
 	return($retval);
 
 } // End of zooyan_stats_user_page()
+
+
+/**
+* This function calculates how many active users are on the site.
+*
+* @param integer $days_ago How many days ago do we want active users from?
+*	Note that this means calendar days.  Aka 12 AM to 11:59:59 PM in the 
+*	calling user's timezone.
+*
+*/
+function zooyan_stats_user_get_num_users($days_ago) {
+
+	$retval = "";
+
+	//
+	// Get the user's GMT offset in seconds.
+	//
+	$offset = $GLOBALS["user"]->timezone;
+	$modifier = $offset * -1;
+
+	//
+	// Get our starting time.  Start at midnight (local time) and subtract
+	// the appropriate number of days.
+	//
+	$start = mktime(0, 0, 0);
+	$start = $start - (86400 * $days_ago);
+
+	$end = $start + 86399;
+
+	//dpr("$days_ago: $offset, $modifier, $start, " . format_date($start) . ", " . format_date($end)); // Debugging
+
+	return($retval);
+
+} // End of zooyan_stats_user_get_num_users()
+
+
+
 
 
