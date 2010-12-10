@@ -1,0 +1,30 @@
+<?php
+/**
+*
+* This module gives user statistics for Zooyan.com.
+*
+* @author Douglas Muth <http://www.dmuth.org/>
+*
+*/
+
+/**
+@TODO:
+- Status check for email address
+- Total number of users currently
+- Get current timezone
+- Total number of users
+- Users yesterday
+	- Determine start and stop seconds of yesterday
+- Security
+- Form
+	- List user counts
+	- Update address
+	- "Email Now" button
+- Actually Send email
+
+Create a new module that hooks into cron and runs 2 reports once every 
+day that are emailed to webmaster@zooyan.com.  The first report is the 
+total number of users and the second report is total number of users 
+from the previous day.
+
+*/
