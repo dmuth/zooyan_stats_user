@@ -78,11 +78,11 @@ function zooyan_stats_user_form($form_state) {
 		"#type" => "fieldset",
 		);
 
-	$retval["users"]["today"] = array(
-		"#type" => "item",
-		"#title" => t("# Users registered today (so far)"),
-		"#value" => zooyan_stats_user_get_num_users(0)
-		);
+	//$retval["users"]["today"] = array(
+	//	"#type" => "item",
+	//	"#title" => t("# Users registered today (so far)"),
+	//	"#value" => zooyan_stats_user_get_num_users(0)
+	//	);
 
 	$retval["users"]["yesterday"] = array(
 		"#type" => "item",
