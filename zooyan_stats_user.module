@@ -9,13 +9,11 @@
 
 /**
 @TODO:
-- Menu hook for /admin/zooyan/stats/users
 - Total number of users currently
 - Get current timezone
 - Total number of users
 - Users yesterday
 	- Determine start and stop seconds of yesterday
-- Security
 - Form
 	- List user counts
 	- Update address
@@ -23,9 +21,53 @@
 	- "Email Now" button
 - Actually Send email
 
-Create a new module that hooks into cron and runs 2 reports once every 
-day that are emailed to webmaster@zooyan.com.  The first report is the 
-total number of users and the second report is total number of users 
-from the previous day.
-
 */
+
+
+
+/**
+* Create our menu item.
+*
+* @return array An array expected from hook_menu().
+*/
+function zooyan_stats_user_menu() {
+
+	$retval = array();
+
+	$retval["admin/zooyan/stats/users"] = array(
+		"title" => "User Stats",
+		"page callback" => "zooyan_stats_user_page",
+		"access callback" => user_access("zooyan stats"),
+		);
+
+	//dpr($retval); // Debugging
+
+	return($retval);
+
+} // End of zooyan_stats_user_menu()
+
+
+/**
+* Create our list of permissions for this module.
+*/
+function zooyan_stats_user_perm() {
+
+	$retval = array("zooyan stats");
+
+	return($retval);
+
+} // End of zooyan_stats_user_perm()
+
+
+/**
+* Our main function to generate content on the user page.
+*/
+function zooyan_stats_user_page() {
+
+	$retval = "placeholder";
+
+	return($retval);
+
+} // End of zooyan_stats_user_page()
+
+
